@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Template xmlns="http://wirecloud.conwet.fi.upm.es/ns/template#">
+  <Catalog.ResourceDescription>
+    <Vendor>CRQ Gestion SL</Vendor>
+    <Name>RESTSQL</Name>
+    <DisplayName>RESTSQL</DisplayName>
+    <Version>0.1</Version>
+    <Author>Carlos</Author>
+    <Mail>carlos@crqgestion.es</Mail>
+    <Description>
+      widget to get data from SQL REST interface
+    </Description>
+    <ImageURI>img/catalogue.png</ImageURI>
+    <iPhoneImageURI>img/catalogue.png</iPhoneImageURI>
+    <WikiURI>https://mashup.lab.fi-ware.org/</WikiURI>
+  </Catalog.ResourceDescription>
+
+  <Platform.Preferences>
+      <Preference name="server" type="text" description="Service to get data from" label="server" default="http://130.206.127.187"/>
+  </Platform.Preferences>
+
+  <Platform.Wiring>
+      <OutputEndpoint name="data_out" type="text" label="Data" friendcode="data"/>
+  </Platform.Wiring>
+
+  <Platform.Link>
+    <XHTML href="index.html"/>
+  </Platform.Link>
+
+  <Platform.Rendering width="6" height="12"/>
+</Template>
