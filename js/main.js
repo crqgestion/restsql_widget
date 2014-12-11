@@ -5,7 +5,7 @@
 	var attrList = ['temperature','pressure'];/*TODO not Hard-Coded*/
 	var entity_type = 'Room';
 	var data_graph = null;
-	var data_entitys =0;
+	var data_entities=null;
 	/**
 	 * Functions
 	 */
@@ -19,12 +19,13 @@
 		return data;
 	}
 	
-	function onNGSISuccess (entitys){
+	function onNGSISuccess (entities){
 		var server = MashupPlatform.prefs.get('history_server');
 
 		data_graph=new Array();
-		data_entitys=0;
-		for (var entity in entitys) {
+		data_entities=0;
+		for (var entity in entities) {
+			data_entities++;
 			getSQL(entity,server); /*Launch GETS*/
 		}
 	}
@@ -32,7 +33,7 @@
 		for (var i = 0; i < attrList.length; i++) {
 			data_graph.push(setData2Grapth(sqldata,attrList[i]));
 		}
-		if (data_graph.length==data_entitys)
+		if (data_entities===0)
 			SendGraph();
 	}
 	function SendGraph(){
@@ -57,7 +58,7 @@
 		MashupPlatform.http.makeRequest(url, {
 			method: 'GET',
 			onSuccess: function (response) {
-					data_entitys++;
+					data_entities--;
 					var forecast_data;
 					forecast_data = JSON.parse(response.responseText);
 					if (forecast_data.error) {
@@ -67,7 +68,7 @@
 					}
 			},
 			onFailure: function (response) {
-				data_entitys++;
+				data_entities--;
 				onError(response);
 			}
 		});
