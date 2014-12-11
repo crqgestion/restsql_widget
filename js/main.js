@@ -1,45 +1,98 @@
 (function () {
-	"use strict";
+	/**
+	 *Globals
+	 */
+	var attrList = ['temperature','pressure'];/*TODO not Hard-Coded*/
+	var entity_type = 'Room';
+	var data_graph = null;
+	var data_entitys =0;
+	/**
+	 * Functions
+	 */
+	function setData2Grapth (sql_data,attrName){
+		var data = new Array();
+		for (var i = 0; i < sql_data.length; i++) {
+			if (sql_data[i].attrName!=attrName)
+				continue;
+ 			data.push( [  parseInt(sql_data[i].recvTimeTs)*1000, parseFloat(sql_data[i].attrValue)  ] );
+		}
+		return data;
+	}
 	
-	var server = MashupPlatform.prefs.get('history_server');
-	var entity = 'Room1';
-	var entity_type = 'Room';//Room2_Room
-	var url= server+'/'+entity+'_'+entity_type;
+	function onNGSISuccess (entitys){
+		var server = MashupPlatform.prefs.get('history_server');
 
-	  var layout,
-        ngsi,
-        form,
-        currentData,
-        error,
-        info;
-
-	
-	console.log('NGSI connection');
-	ngsi = new NGSI.Connection(MashupPlatform.prefs.get('ngsi_server'), {
-				use_user_fiware_token: true,
-	});
-	console.log(ngsi);
-	
-	MashupPlatform.http.makeRequest(url, {
+		data_graph=new Array();
+		data_entitys=0;
+		for (var entity in entitys) {
+			getSQL(entity,server); /*Launch GETS*/
+		}
+	}
+	function onSQLdata(sqldata){ /*Data here is a Room with temp and presuare*/
+		for (var i = 0; i < attrList.length; i++) {
+			data_graph.push(setData2Grapth(sqldata,attrList[i]));
+		}
+		if (data_graph.length==data_entitys)
+			SendGraph();
+	}
+	function SendGraph(){
+		var config={
+			xaxis : {
+				mode: 'time'
+				},
+			yaxis :{
+				autoscale: true
+			}
+		};	
+		/*Event HERE!*/
+		var graph={config:config,data:data_graph};
+		console.log('GRAPH');
+		console.log(JSON.stringify(graph));
+		MashupPlatform.wiring.pushEvent('data_out',JSON.stringify('START'));
+		MashupPlatform.wiring.pushEvent('data_out',JSON.stringify(graph));
+		MashupPlatform.wiring.pushEvent('data_out',JSON.stringify('END'));
+	}
+	function getSQL(entity,server){
+		var url= server+'/'+entity+'_'+entity_type;
+		MashupPlatform.http.makeRequest(url, {
 			method: 'GET',
 			onSuccess: function (response) {
-					console.log('HTTP connection');
-					console.log(response);
+					data_entitys++;
 					var forecast_data;
 					forecast_data = JSON.parse(response.responseText);
 					if (forecast_data.error) {
-							onError();
+						onError(response);
 					} else {
-							MashupPlatform.wiring.pushEvent('data_out',forecast_data);
-							//onSuccess(forecast_data);
+						onSQLdata(forecast_data);
 					}
 			},
-			onError: function () {
-					onError();
+			onFailure: function (response) {
+				data_entitys++;
+				onError(response);
 			}
-	});
-
-	window.addEventListener("DOMContentLoaded", init, false);
+		});
+	}
+	function onError (response){
+		console.log('Error!');
+		console.log(response);
+	}
 	
+	/**
+	 *Initialization
+	 */
+	var ngsi = new NGSI.Connection(MashupPlatform.prefs.get('ngsi_server'));
+	/*Getting data**/
+	ngsi.query([{
+							isPattern: true,
+							id: '.',/*All*/
+							type: entity_type
+					}],
+					null,
+					{
+						flat: true,
+						onSuccess: onNGSISuccess,
+						onFailure: onError
+					}
+					);
 	
 })();
