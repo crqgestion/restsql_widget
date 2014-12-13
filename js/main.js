@@ -2,8 +2,8 @@
 	/**
 	 *Globals
 	 */
-	var attrList = ['temperature','pressure'];/*TODO not Hard-Coded*/
-	var entity_type = 'Room';
+	var attrList = ['temperature','battery voltage'];/*TODO not Hard-Coded*/
+	var entity_type = 'Sensor';
 	var data_graph = null;
 	var data_entities=null;
 	/**
