@@ -1,7 +1,7 @@
 ZIP_BIN = /usr/bin/zip
 MV= /bin/mv
 SRCS =js img index.html config.xml
-NAME='widget'
+NAME='restsql-operator'
 
 all: zip
 	@echo File Compressed
