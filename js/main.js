@@ -50,9 +50,8 @@
 		};	
 		/*Event HERE!*/
 		var graph={config:config,data:data_graph};
-		MashupPlatform.wiring.pushEvent('data_out',JSON.stringify('START'));
-		MashupPlatform.wiring.pushEvent('data_out',JSON.stringify(graph));
-		MashupPlatform.wiring.pushEvent('data_out',JSON.stringify('END'));
+		MashupPlatform.wiring.pushEvent('data_out',(graph));
+
 	}
 	function getSQL(entity,server){
 		var url= server+'/'+entity+'_'+entity_type;
