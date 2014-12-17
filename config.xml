@@ -3,21 +3,24 @@
   <details>
     <title>RESTSQL</title>
     <authors>cquijano</authors>
-		<email>cquijano@crqgestion.es</email>
+    <email>cquijano@crqgestion.es</email>
     <image>img/catalogue.png</image>
-		<description>Get Data from a REST/SQL Server</description>
+    <description>Get Data from a REST/SQL Server</description>
+    <longdescription>README.md</longdescription>
+    <license>GPLv3+ w/linking exception</license>
+    <licenseurl>http://www.gnu.org/licenses/agpl-3.0.html</licenseurl>
   </details>
   <requirements>
     <feature name="NGSI"/>
   </requirements>
-	<preferences>
-  	<preference name="ngsi_server" type="text" label="NGSI Server" description="NGSI Server" default="http://fiware.crqgestion.es:1026/"/>
-		<preference name="history_server" type="text" description="History Server" label="History Server" default="http://fiware.crqgestion.es"/>
-	</preferences>
-	<wiring>
-			<outputendpoint name="data_out" type="text" label="Data" friendcode="Data" description="Data"/>
+  <preferences>
+    <preference name="ngsi_server" type="text" label="NGSI Server" description="NGSI Server" default="http://fiware.crqgestion.es:1026/"/>
+    <preference name="history_server" type="text" description="History Server" label="History Server" default="http://fiware.crqgestion.es"/>
+  </preferences>
+  <wiring>
+    <outputendpoint name="data_out" type="text" label="Data" friendcode="Data" description="Data"/>
   </wiring>
-	<scripts>
+  <scripts>
     <script src="js/main.js"/>
   </scripts>
 </operator>
